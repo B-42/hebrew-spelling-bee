@@ -7,7 +7,8 @@ CENTER_INDEX = 3,
 CENTER_LETTER = LETTERS[CENTER_INDEX],
 MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
-MSG_INVALID = 'לא במילון';
+MSG_INVALID = 'לא במילון',
+MSG_INVALID_KEY = 'לא במחסן האותיות';
 let isWaiting = false;
 
 shuffleLetters();
@@ -63,7 +64,7 @@ function updateButtons() {
 
 function resetText(message) {
     qsa('.row button').forEach(e=>e.onclick=null);
-    showPrompt(message);
+    if(message) showPrompt(message);
     setTimeout(() => {
         text.innerText = '';
         qsa('.row button').forEach(e=>e.onclick=letterClicked);
@@ -71,7 +72,7 @@ function resetText(message) {
 }
 
 function updateText() {
-    text.style.fontSize = 30 / Math.pow( text.innerText.length, 0.2 ) + 'pt';
+    text.style.fontSize = Math.min(30 * 10 / (text.innerText.length), 30) + 'pt';
     if(text.innerText.length > 20) {
         resetText(MSG_TOO_LONG);
     }
@@ -84,6 +85,9 @@ document.onkeydown = ev => {
         addText(ev.key);
     else if(ev.key == 'Enter')
         checkWord();
+    else {
+        showPrompt(MSG_INVALID_KEY);
+    }
 }
 
 deleteButton.onclick = deleteLastLetter;
