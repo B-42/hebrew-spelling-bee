@@ -82,6 +82,7 @@
     left: 50%;
     line-height: 28pt;
     transform: translate(-50%, 0);
+    margin-bottom: 20px;
 }
 
 #promptBar.hide {opacity: 0;}

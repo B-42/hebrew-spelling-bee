@@ -79,15 +79,18 @@ function updateText() {
 
 document.onkeydown = ev => {
     if(isWaiting) return;
+    //console.log(ev.key);
     if(LETTERS.includes(ev.key))
         addText(ev.key);
+    else if(ev.key == 'Enter')
+        checkWord();
 }
 
 deleteButton.onclick = deleteLastLetter;
 shuffleButton.onclick = ev => {shuffleLetters(); updateButtons();}
 enterButton.onclick = checkWord;
 
-function checkWord(ev) {
+function checkWord() {
     const word = formatWord( text.innerText );
 
     if(word.length < MIN_LENGTH) {
