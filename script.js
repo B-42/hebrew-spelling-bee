@@ -1,14 +1,18 @@
-const LETTERS = 'טמבלרצח'.split(''),
+const LETTERS = 'מישהודי'.split(''),
 MIN_LENGTH = 3,
 MAX_LENGTH = 20,
-WAIT_MS = 750,
-CLICK_ANIM_MS = 100,
+LONG_WAIT = 750,
+MID_WAIT = 300,
+SHORT_WAIT = 100,
 CENTER_INDEX = 3,
 CENTER_LETTER = LETTERS[CENTER_INDEX],
 MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
 MSG_INVALID = 'לא במילון',
-MSG_INVALID_KEY = 'לא במחסן האותיות';
+MSG_INVALID_KEY = 'לא במחסן האותיות',
+usedWords = {};
+
+
 let isWaiting = false;
 
 shuffleLetters();
@@ -37,7 +41,7 @@ for(const i of range(5)) {
 function letterClicked(ev) {
     ev.target.classList.toggle('clicked');
     addText(ev.target.innerText);
-    setTimeout(()=>ev.target.classList.toggle('clicked'), CLICK_ANIM_MS);
+    setTimeout(()=>ev.target.classList.toggle('clicked'), SHORT_WAIT);
 }
 
 function addText(str) {
@@ -68,7 +72,7 @@ function resetText(message) {
     setTimeout(() => {
         text.innerText = '';
         qsa('.row button').forEach(e=>e.onclick=letterClicked);
-    }, WAIT_MS);
+    }, LONG_WAIT);
 }
 
 function updateText() {
@@ -85,8 +89,10 @@ document.onkeydown = ev => {
         addText(ev.key);
     else if(ev.key == 'Enter')
         checkWord();
-    else {
-        showPrompt(MSG_INVALID_KEY);
+    else if(ev.key == 'Backspace')
+        deleteLastLetter();
+    else if(ev.key.match(/[א-ת]/)){
+        showPrompt(MSG_INVALID_KEY, MID_WAIT);
     }
 }
 
@@ -112,7 +118,7 @@ function checkWord() {
     var isValid = filteredWords.includes(word);
 
     if(isValid) {
-        stats.innerText += word + "\t";
+        addWord(word);
     }
     
     resetText(isValid ? '' : MSG_INVALID);
@@ -130,7 +136,7 @@ function formatWord(word){
     return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }
 
-function showPrompt(message, duration=WAIT_MS) {
+function showPrompt(message, duration=LONG_WAIT) {
     promptBar.innerText = message;
     promptBar.classList.toggle('hide');
     isWaiting = true;
@@ -138,4 +144,39 @@ function showPrompt(message, duration=WAIT_MS) {
         promptBar.classList.toggle('hide');
         isWaiting = false;
     }, duration);
+}
+
+function addWord(word) {
+    if(!usedWords[word.length])
+        usedWords[word.length] = [];
+    usedWords[word.length].push(word);
+    updateTable();
+}
+
+function updateTable() {
+    table.innerHTML = '';
+    const firstRow = make('tr');
+    for(const len in usedWords) {
+        const th = make('th');
+        th.innerText = len;
+        firstRow.insertBefore(th, firstRow.children[0]);
+    }
+    table.appendChild(firstRow);
+
+    let x=0;
+    while(true) {
+        const tr = make('tr');
+        let shouldStop = true;
+        for(const len in usedWords) {
+            const td = make('td');
+            if(usedWords[len][x]) {
+                td.innerText = usedWords[len][x];
+                shouldStop = false;
+            }
+            tr.insertBefore(td, tr.children[0]);
+        }
+        table.appendChild(tr);
+        if(shouldStop) break;
+        x++;
+    }
 }
