@@ -1,7 +1,7 @@
 const LETTERS = 'מישהודי'.split(''),
 MIN_LENGTH = 3,
 MAX_LENGTH = 20,
-LONG_WAIT = 750,
+LONG_WAIT = 600,
 MID_WAIT = 300,
 SHORT_WAIT = 100,
 CENTER_INDEX = 3,
@@ -10,8 +10,19 @@ MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
 MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
-usedWords = {};
+usedWords = {},
+RGX_HEB_LETTER = /[א-ת]/,
+RGX_END_NORMAL = /[מנצפכ]/,
+RGX_END_LAST = /[םןץףך]/,
+END_LETTERS_DICT = {},
+END_LETTER_PAIRS = [
+    'מם', 'נן', 'צץ', 'פף', 'כך'
+];
 
+for(const pair of END_LETTER_PAIRS) {
+    END_LETTERS_DICT[pair[0]] = pair[1];
+    END_LETTERS_DICT[pair[1]] = pair[0];
+}
 
 let isWaiting = false;
 
@@ -45,12 +56,15 @@ function letterClicked(ev) {
 }
 
 function addText(str) {
-    text.innerText += str;
+    const letterSpan = make('span');
+    letterSpan.innerText = str;
+    if(str == CENTER_LETTER) letterSpan.classList.add('centerLetter');
+    text.appendChild(letterSpan);
     updateText();
 }
 
 function deleteLastLetter() {
-    text.innerText = text.innerText.substring(0,text.innerText.length - 1);
+    text.removeChild(text.children[text.children.length - 1]);
     updateText();
 }
 
@@ -77,6 +91,16 @@ function resetText(message) {
 
 function updateText() {
     text.style.fontSize = Math.min(30 * 10 / (text.innerText.length), 30) + 'pt';
+    
+    for(let i=0, len = text.children.length; i<len; i++) {
+        const letterSpan = text.children[i],
+            letter = letterSpan.innerText;
+        
+        if( (i == len - 1 && letter.match(RGX_END_NORMAL) && len >= 2)
+        || (i < len - 1 && letter.match(RGX_END_LAST)) )
+            letterSpan.innerText = END_LETTERS_DICT[letter];
+    }
+
     if(text.innerText.length > 20) {
         resetText(MSG_TOO_LONG);
     }
@@ -91,7 +115,7 @@ document.onkeydown = ev => {
         checkWord();
     else if(ev.key == 'Backspace')
         deleteLastLetter();
-    else if(ev.key.match(/[א-ת]/)){
+    else if(ev.key.match(RGX_HEB_LETTER)){
         showPrompt(MSG_INVALID_KEY, MID_WAIT);
     }
 }
