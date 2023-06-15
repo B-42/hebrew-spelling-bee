@@ -105,10 +105,14 @@
 
 #table th {
     background-color: var(--yellow);
+    font-weight: 600;
+    font-size: 15pt;
     background-clip: content-box;
     padding: 10px;
     width: 100px;
     border-radius: 20px;
+    opacity: 90%;
+    color: rgba(0,0,0,0.9);
 }
 
 /*#table tr:not(:first-of-type) {
@@ -128,6 +132,52 @@ h2 {
 
 .centerLetter {
     color: var(--yellow);
+}
+
+#rankContainer {
+    margin-top: 20px;
+}
+
+#rankWords {
+    margin-right: 30px;
+    padding: 10px;
+}
+
+#bigScoreContainer {
+    display: flex;
+    justify-content: center;
+}
+
+#scoreContainer {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    font-weight: bold;
+    width: fit-content;
+    padding: 5px;
+}
+
+.rankdot {
+    color: gray;
+    font-size: 25pt;
+    line-height: 10pt;
+    margin: 15px;
+}
+
+.rankdot.completed, .rankdot.current {
+    color: var(--yellow);
+}
+
+.rankdot.current {
+    font-size: 75pt;
+    vertical-align: -23px;
+}
+
+.rankword.current {
+    opacity: 100%;
+}
+
+.rankword {
+    opacity: 0;
 }
 
 :root {

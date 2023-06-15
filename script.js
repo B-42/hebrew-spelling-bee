@@ -1,5 +1,5 @@
 const LETTERS = 'מישהודי'.split(''),
-MIN_LENGTH = 3,
+MIN_LENGTH = 4,
 MAX_LENGTH = 20,
 LONG_WAIT = 600,
 MID_WAIT = 300,
@@ -17,7 +17,9 @@ RGX_END_LAST = /[םןץףך]/,
 END_LETTERS_DICT = {},
 END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
-];
+],
+BULLET = '•';
+
 
 for(const pair of END_LETTER_PAIRS) {
     END_LETTERS_DICT[pair[0]] = pair[1];
@@ -48,6 +50,22 @@ for(const i of range(5)) {
     
     beehive.appendChild(row);
 }
+
+for(const rank of RANKS) {
+    const rankDot = make('span');
+    rankDot.innerText = BULLET;
+    rankDot.classList.add('rankdot');
+
+    const rankWord = make('span');
+    rankWord.innerText = rank.title;
+    rankWord.classList.add('rankword');
+
+    rankDots.insertBefore(rankDot, rankDots.children[0]);
+    rankWords.appendChild(rankWord);
+    
+    rank.html = {dot: rankDot, word: rankWord};
+}
+updateRank();
 
 function letterClicked(ev) {
     ev.target.classList.toggle('clicked');
@@ -109,7 +127,7 @@ function updateText() {
 document.onkeydown = ev => {
     if(isWaiting) return;
     //console.log(ev.key);
-    if(LETTERS.includes(ev.key))
+    if(LETTERS.includes(ev.key) || LETTERS.includes(END_LETTERS_DICT[ev.key]))
         addText(ev.key);
     else if(ev.key == 'Enter')
         checkWord();
@@ -143,6 +161,8 @@ function checkWord() {
 
     if(isValid) {
         addWord(word);
+        scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
+        updateRank();
     }
     
     resetText(isValid ? '' : MSG_INVALID);
@@ -202,5 +222,28 @@ function updateTable() {
         table.appendChild(tr);
         if(shouldStop) break;
         x++;
+    }
+}
+
+function scoreWord(word) {
+    return word.length == MIN_LENGTH ? 1 : word.length;
+}
+
+function updateRank() {
+    const score = Math.floor(scoreText.innerText);
+    let maxRank = null;
+    for(const rank of RANKS) {
+        console.log(score >= Math.floor( rank.minScore ), score, rank.minScore);
+        if(score >= Math.floor(rank.minScore)) {
+            rank.html.dot.classList.add('completed');
+            rank.html.dot.classList.remove('current');
+            rank.html.word.classList.remove('current');
+            maxRank = rank;
+        }
+    }
+
+    if(maxRank) {
+        maxRank.html.dot.classList.add('current');
+        maxRank.html.word.classList.add('current');
     }
 }
