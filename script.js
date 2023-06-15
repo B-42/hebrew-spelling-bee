@@ -215,6 +215,9 @@ function updateTable() {
             const td = make('td');
             if(usedWords[len][x]) {
                 td.innerText = usedWords[len][x];
+                /*hr = make('hr');
+                hr.style.padding = '0px';
+                tr.insertBefore(hr, tr.children[0]);*/
                 shouldStop = false;
             }
             tr.insertBefore(td, tr.children[0]);
@@ -233,7 +236,6 @@ function updateRank() {
     const score = Math.floor(scoreText.innerText);
     let maxRank = null;
     for(const rank of RANKS) {
-        console.log(score >= Math.floor( rank.minScore ), score, rank.minScore);
         if(score >= Math.floor(rank.minScore)) {
             rank.html.dot.classList.add('completed');
             rank.html.dot.classList.remove('current');

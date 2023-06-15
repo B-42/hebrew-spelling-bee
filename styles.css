@@ -138,6 +138,10 @@ h2 {
     margin-top: 20px;
 }
 
+#rankDots {
+    /*width: fit-content;*/
+}
+
 #rankWords {
     margin-right: 30px;
     padding: 10px;
@@ -178,6 +182,10 @@ h2 {
 
 .rankword {
     opacity: 0;
+}
+
+#rankLine {
+    position: fixed;
 }
 
 :root {
