@@ -1,4 +1,5 @@
-const LETTERS = 'מישהודי'.split(''),
+//const LETTERS = 'מישהודי'.split(''),
+const LETTERS = 'אבהנצרי'.split(''),
 MIN_LENGTH = 4,
 MAX_LENGTH = 20,
 LONG_WAIT = 600,
@@ -10,6 +11,7 @@ MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
 MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
+MSG_NO_CENTER = `חובה להשתמש באות האמצעית`,
 usedWords = {},
 RGX_HEB_LETTER = /[א-ת]/,
 RGX_END_NORMAL = /[מנצפכ]/,
@@ -18,6 +20,7 @@ END_LETTERS_DICT = {},
 END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
 ],
+PAUSE_WHILE_MSG = false,
 BULLET = '•';
 
 
@@ -60,9 +63,15 @@ for(const rank of RANKS) {
     rankWord.innerText = rank.title;
     rankWord.classList.add('rankword');
 
-    rankDots.insertBefore(rankDot, rankDots.children[0]);
-    rankWords.appendChild(rankWord);
-    
+    const rankDiv = make('div');
+    rankDiv.appendChild(rankDot);
+    rankDiv.appendChild(rankWord);
+    rankDiv.classList.add('rankdiv');
+
+    //rankDots.insertBefore(rankDot, rankDots.children[0]);
+    //rankWords.appendChild(rankWord);
+    rankContainer.insertBefore(rankDiv, rankContainer.children[0]);
+
     rank.html = {dot: rankDot, word: rankWord};
 }
 updateRank();
@@ -109,7 +118,7 @@ function resetText(message) {
 
 function updateText() {
     text.style.fontSize = Math.min(30 * 10 / (text.innerText.length), 30) + 'pt';
-    
+
     for(let i=0, len = text.children.length; i<len; i++) {
         const letterSpan = text.children[i],
             letter = letterSpan.innerText;
@@ -125,12 +134,14 @@ function updateText() {
 }
 
 document.onkeydown = ev => {
-    if(isWaiting) return;
+    if(isWaiting && PAUSE_WHILE_MSG) return;
     //console.log(ev.key);
-    if(LETTERS.includes(ev.key) || LETTERS.includes(END_LETTERS_DICT[ev.key]))
+    if(LETTERS.includes(ev.key) || LETTERS.includes(END_LETTERS_DICT[ev.key])) {
         addText(ev.key);
-    else if(ev.key == 'Enter')
+    }
+    else if(ev.key == 'Enter') {
         checkWord();
+    }
     else if(ev.key == 'Backspace')
         deleteLastLetter();
     else if(ev.key.match(RGX_HEB_LETTER)){
@@ -160,6 +171,10 @@ function checkWord() {
     var isValid = filteredWords.includes(word);
 
     if(isValid) {
+        if(!word.includes(CENTER_LETTER) && !word.includes(END_LETTERS_DICT[CENTER_LETTER])) {
+            resetText(MSG_NO_CENTER);
+            return;
+        }
         addWord(word);
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
