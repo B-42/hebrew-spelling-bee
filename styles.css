@@ -53,12 +53,34 @@
     font-size: 30pt;
     font-weight: 700;
     height: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     direction: rtl;
+    display: inline-block;
 }
 
-#text:focus {
-    outline: none;
+#tab {
+    display: inline-block;
+    color: var(--yellow);
+    width: 3px;
+    height: 45px;
+    position: relative;
+    top: 8px;
+    margin: 2px;
+    background-color: var(--yellow);
+    animation: blink .4s linear 0s infinite alternate;
+}
+
+@keyframes blink {
+    0% {opacity: 100%;}
+    49% {opacity: 100%;}
+    50% {opacity: 0%;}
+    100% {opacity: 0%;}
+}
+
+@keyframes fade-out-in {
+    0% {color: initial;}
+    50% {color: rgba(0,0,0,0);}
+    100% {color: initial;}
 }
 
 #controls {
@@ -70,6 +92,11 @@
     height: 45px;
     border-radius: 25px;
     font-size: 15pt;
+    transition: none;
+}
+
+#controls button.clicked {
+    background-color: rgba(0,0,0,0.2);
 }
 
 #controls button:not(#shuffleButton) {
@@ -125,14 +152,20 @@
     background-color: rgba(0,0,0,0.1);
 }*/
 
-h2 {
+#usedTitle {
     font-weight: 400;
+    margin-bottom: -5px;
+}
+
+#input {
+    flex-grow: 2;
 }
 
 #stats {
     border: 1px solid gray;
     border-radius: 5px;
-    width: 30em;
+    width: 30rem;
+    flex-grow: 1;
 }
 
 .centerLetter {
@@ -141,14 +174,18 @@ h2 {
 
 #rankContainer {
     display: flex;
-    align-items: center;
+    width: 60%;
+    margin-left: 20%;
+    align-items: flex-start;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 #bigScoreContainer {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 #scoreContainer {
@@ -160,20 +197,22 @@ h2 {
 }
 
 .rankdot {
-    color: gray;
-    font-size: 25pt;
-    line-height: 10pt;
-    margin: 30px;
-    margin-bottom: 0;
+    background-color: gray;
+    --radius: 10px;
+    width: var(--radius);
+    height: var(--radius);
+    border-radius: var(--radius);
+    font-size: 10pt;
+    line-height: 24pt;
 }
 
 .rankdot.completed, .rankdot.current {
-    color: var(--yellow);
+    background-color: var(--yellow);
 }
 
 .rankdot.current {
-    font-size: 75pt;
-    vertical-align: -23px;
+    --radius: 30px;
+    margin-top: -9px;
 }
 
 .rankword.current {
@@ -182,7 +221,8 @@ h2 {
 
 .rankword {
     opacity: 0;
-    margin: 12px;
+    margin-top: 4px;
+    width: 30px;
 }
 
 .rankdiv {
@@ -191,6 +231,38 @@ h2 {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
+    z-index: 1;
+}
+
+#minButton {
+    border: none;
+    background: none;
+    font-weight: 1000;
+    font-size: 15pt;
+    margin: .1rem;
+    color: gray;
+    transform: scaleX(200%) scaleY(-100%);
+}
+
+#minButton.clicked {
+    transform: scaleX(200%);
+}
+
+.minimized {
+    display: none;
+}
+
+#usedContainer {
+    margin: 10px;
+}
+
+hr {
+    width: 53%;
+    transform: translateY(25px);
+    background-color: gray;
+    border: none;
+    height: 1px;
+    z-index: -1;
 }
 
 :root {

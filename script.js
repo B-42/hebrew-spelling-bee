@@ -11,7 +11,8 @@ MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
 MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
-MSG_NO_CENTER = `חובה להשתמש באות האמצעית`,
+MSG_NO_CENTER = 'חובה להשתמש באות האמצעית',
+MSG_USED_WORD = 'השתמשת כבר במילה זו',
 usedWords = {},
 RGX_HEB_LETTER = /[א-ת]/,
 RGX_END_NORMAL = /[מנצפכ]/,
@@ -46,7 +47,7 @@ for(const i of range(5)) {
         const button = make('button');
         button.id = 'button' + (x+1);
         button.innerText = LETTERS[x];
-        button.onclick = letterClicked;
+        button.onclick = ev => buttonClick(ev, () => addText(button.innerText));
         row.appendChild(button);
         x++;
     }
@@ -55,8 +56,8 @@ for(const i of range(5)) {
 }
 
 for(const rank of RANKS) {
-    const rankDot = make('span');
-    rankDot.innerText = BULLET;
+    const rankDot = make('div');
+    //rankDot.innerText = BULLET;
     rankDot.classList.add('rankdot');
 
     const rankWord = make('span');
@@ -76,23 +77,47 @@ for(const rank of RANKS) {
 }
 updateRank();
 
-function letterClicked(ev) {
+minButton.onclick = minimize;
+
+function buttonClick(ev, func) {
     ev.target.classList.toggle('clicked');
-    addText(ev.target.innerText);
+    ev.target.blur();
     setTimeout(()=>ev.target.classList.toggle('clicked'), SHORT_WAIT);
+    func();
+}
+
+function minimize() {
+    minButton.blur();
+    minButton.classList.toggle('clicked');
+    usedContainer.classList.toggle('minimized');
+    scoreContainer.classList.toggle('minimized');
+    qsa('.rankword').forEach(wordElm => wordElm.classList.toggle('minimized'));
 }
 
 function addText(str) {
     const letterSpan = make('span');
     letterSpan.innerText = str;
     if(str == CENTER_LETTER) letterSpan.classList.add('centerLetter');
-    text.appendChild(letterSpan);
+    text.insertBefore(letterSpan, tab);
     updateText();
 }
 
-function deleteLastLetter() {
+/*function deleteLastLetter() {
     text.removeChild(text.children[text.children.length - 1]);
     updateText();
+}*/
+
+function backspace() {
+    if(text.children.length == 1) return -1;
+
+    for(let i=1; i<text.children.length; i++) {
+        if(text.children[i] == tab) {
+            text.removeChild(text.children[i-1]);
+            return i-1;
+        }
+    }
+
+    return -1;
 }
 
 function shuffleLetters() {
@@ -103,17 +128,26 @@ function shuffleLetters() {
 
 function updateButtons() {
     for(const i of range(7)) {
-        get('button' + (i+1)).innerText = LETTERS[i];
+        const button = get('button' + (i+1));
+        button.style.animation = `fade-out-in ${LONG_WAIT*2/1000}s ease-out`;
+        setTimeout(() => {
+            button.innerText = LETTERS[i];
+        }, LONG_WAIT);
+        setTimeout(() => {
+            button.style.animation = `none`;
+        }, LONG_WAIT*2 + 1);
     }
 }
 
-function resetText(message) {
-    qsa('.row button').forEach(e=>e.onclick=null);
+function resetText(message, duration = LONG_WAIT) {
+    //qsa('.row button').forEach(e=>e.onclick=null);
     if(message) showPrompt(message);
     setTimeout(() => {
-        text.innerText = '';
-        qsa('.row button').forEach(e=>e.onclick=letterClicked);
-    }, LONG_WAIT);
+        for(let i=text.children.length - 1; i >= 0; i--)
+            if(text.children[i] != tab)
+                text.removeChild(text.children[i]);
+        //qsa('.row button').forEach(e=>e.onclick=letterClicked);
+    }, duration);
 }
 
 function updateText() {
@@ -123,7 +157,7 @@ function updateText() {
         const letterSpan = text.children[i],
             letter = letterSpan.innerText;
         
-        if( (i == len - 1 && letter.match(RGX_END_NORMAL) && len >= 2)
+        if( ( (i == len - 1 || i == len - 2 && text.children[len-1] == tab) && letter.match(RGX_END_NORMAL) && len >= 3)
         || (i < len - 1 && letter.match(RGX_END_LAST)) )
             letterSpan.innerText = END_LETTERS_DICT[letter];
     }
@@ -133,25 +167,40 @@ function updateText() {
     }
 }
 
+function moveTab(steps) {
+    const tabIndex = [...text.children].indexOf(tab),
+        newIndex = tabIndex + steps;
+    if(newIndex < 0 || newIndex >= text.children.length)
+        return false;
+    
+    const tabClone = tab.cloneNode(true);
+    text.removeChild(tab);
+    text.insertBefore(tabClone, text.children[newIndex]);
+    return true;
+}
+
 document.onkeydown = ev => {
     if(isWaiting && PAUSE_WHILE_MSG) return;
     //console.log(ev.key);
     if(LETTERS.includes(ev.key) || LETTERS.includes(END_LETTERS_DICT[ev.key])) {
         addText(ev.key);
-    }
-    else if(ev.key == 'Enter') {
-        checkWord();
-    }
-    else if(ev.key == 'Backspace')
-        deleteLastLetter();
-    else if(ev.key.match(RGX_HEB_LETTER)){
+        return;
+    } else if(ev.key.match(RGX_HEB_LETTER)){
         showPrompt(MSG_INVALID_KEY, MID_WAIT);
+        return;
+    }
+    switch(ev.key) {
+        case 'Enter': checkWord(); break;
+        case 'Backspace': backspace(); break;
+        case 'ArrowLeft': moveTab(1); break;
+        case 'ArrowRight': moveTab(-1); break;
+        default: console.log(ev.key);
     }
 }
 
-deleteButton.onclick = deleteLastLetter;
-shuffleButton.onclick = ev => {shuffleLetters(); updateButtons();}
-enterButton.onclick = checkWord;
+deleteButton.onclick = ev => buttonClick(ev, backspace);
+shuffleButton.onclick = ev => buttonClick(ev, () => {shuffleLetters(); updateButtons();});
+enterButton.onclick = ev => buttonClick(ev, checkWord);
 
 function checkWord() {
     const word = formatWord( text.innerText );
@@ -175,12 +224,16 @@ function checkWord() {
             resetText(MSG_NO_CENTER);
             return;
         }
+        if(usedWords[word.length] && usedWords[word.length].includes(word)) {
+            resetText(MSG_USED_WORD);
+            return;
+        }
         addWord(word);
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
     }
     
-    resetText(isValid ? '' : MSG_INVALID);
+    resetText(isValid ? '' : MSG_INVALID, isValid ? 0 : LONG_WAIT);
 }
 
 function removeNiqqud(word) {
@@ -192,7 +245,7 @@ function removeNiqqud(word) {
 function formatWord(word){
     word = removeNiqqud(word);
     // remove all spaces, commas, and periods and any other punctuation
-    return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\|]/g,"");
 }
 
 function showPrompt(message, duration=LONG_WAIT) {
@@ -206,8 +259,11 @@ function showPrompt(message, duration=LONG_WAIT) {
 }
 
 function addWord(word) {
+    usedTitle.classList.remove('minimized');
+
     if(!usedWords[word.length])
         usedWords[word.length] = [];
+
     usedWords[word.length].push(word);
     updateTable();
 }
@@ -253,6 +309,7 @@ function updateRank() {
     for(const rank of RANKS) {
         if(score >= Math.floor(rank.minScore)) {
             rank.html.dot.classList.add('completed');
+            rank.html.dot.innerText = '';
             rank.html.dot.classList.remove('current');
             rank.html.word.classList.remove('current');
             maxRank = rank;
@@ -261,6 +318,7 @@ function updateRank() {
 
     if(maxRank) {
         maxRank.html.dot.classList.add('current');
+        maxRank.html.dot.innerText = score;
         maxRank.html.word.classList.add('current');
     }
 }
