@@ -11,6 +11,8 @@
     display: flex;
     width: 100%;
     height: 100%;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 #container > * {
@@ -159,13 +161,20 @@
 
 #input {
     flex-grow: 2;
+    width: 20em;
 }
 
 #stats {
     border: 1px solid gray;
     border-radius: 5px;
-    width: 30rem;
+    width: 30em;
     flex-grow: 1;
+}
+
+#stats.minimized {display: initial;}
+
+#stats.minimized *:not(#minButton) {
+    display: none;
 }
 
 .centerLetter {
@@ -257,12 +266,36 @@
 }
 
 hr {
-    width: 53%;
+    /*width: 53%;*/
     transform: translateY(25px);
     background-color: gray;
     border: none;
     height: 1px;
     z-index: -1;
+}
+
+
+@media only screen and (max-width: 750px) {
+    #container {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+    #stats {
+        position: absolute;
+        background-color: white;
+        top: 1em;
+        width: 80%;
+        height: 90vh;
+    }
+    #stats.minimized {
+        height: 2em;
+    }
+    #promptBar {
+        z-index: 3;
+    }
+    #promptBar.hide {
+        z-index: -1;
+    }
 }
 
 :root {

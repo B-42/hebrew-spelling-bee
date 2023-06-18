@@ -73,9 +73,10 @@ for(const rank of RANKS) {
     //rankWords.appendChild(rankWord);
     rankContainer.insertBefore(rankDiv, rankContainer.children[0]);
 
-    rank.html = {dot: rankDot, word: rankWord};
+    rank.html = {dot: rankDot, word: rankWord, div: rankDiv};
 }
-updateRank();
+updateRank(); updateRankLine();
+
 
 minButton.onclick = minimize;
 
@@ -91,6 +92,7 @@ function minimize() {
     minButton.classList.toggle('clicked');
     usedContainer.classList.toggle('minimized');
     scoreContainer.classList.toggle('minimized');
+    stats.classList.toggle('minimized');
     qsa('.rankword').forEach(wordElm => wordElm.classList.toggle('minimized'));
 }
 
@@ -181,7 +183,7 @@ function moveTab(steps) {
 
 document.onkeydown = ev => {
     if(isWaiting && PAUSE_WHILE_MSG) return;
-    //console.log(ev.key);
+
     if(LETTERS.includes(ev.key) || LETTERS.includes(END_LETTERS_DICT[ev.key])) {
         addText(ev.key);
         return;
@@ -189,12 +191,13 @@ document.onkeydown = ev => {
         showPrompt(MSG_INVALID_KEY, MID_WAIT);
         return;
     }
+
     switch(ev.key) {
         case 'Enter': checkWord(); break;
         case 'Backspace': backspace(); break;
         case 'ArrowLeft': moveTab(1); break;
         case 'ArrowRight': moveTab(-1); break;
-        default: console.log(ev.key);
+        //default: console.log(ev.key);
     }
 }
 
@@ -321,4 +324,8 @@ function updateRank() {
         maxRank.html.dot.innerText = score;
         maxRank.html.word.classList.add('current');
     }
+}
+
+function updateRankLine() {
+    rankLine.style.width = Math.abs(RANKS[0].html.dot.offsetLeft - RANKS.slice(-1)[0].html.dot.offsetLeft) + 'px';
 }
