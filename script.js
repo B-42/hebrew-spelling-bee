@@ -80,6 +80,9 @@ updateRank(); updateRankLine();
 
 minButton.onclick = minimize;
 
+if(window.innerWidth <= 750)
+    minimize();
+
 function buttonClick(ev, func) {
     ev.target.classList.toggle('clicked');
     ev.target.blur();
@@ -99,6 +102,8 @@ function minimize() {
 function addText(str) {
     const letterSpan = make('span');
     letterSpan.innerText = str;
+    const children = [...text.children];
+    letterSpan.onclick = ev => moveTabToNode(letterSpan, true);
     if(str == CENTER_LETTER) letterSpan.classList.add('centerLetter');
     text.insertBefore(letterSpan, tab);
     updateText();
@@ -175,10 +180,16 @@ function moveTab(steps) {
     if(newIndex < 0 || newIndex >= text.children.length)
         return false;
     
+    const tabClone = tab.cloneNode(true), child = text.children[newIndex];
+    text.removeChild(tab);
+    text.insertBefore(tabClone, steps < 0 ? child : child.nextSibling);
+    return true;
+}
+
+function moveTabToNode(node, after=false) {
     const tabClone = tab.cloneNode(true);
     text.removeChild(tab);
-    text.insertBefore(tabClone, text.children[newIndex]);
-    return true;
+    text.insertBefore(tabClone, after ? node.nextSibling : node);
 }
 
 document.onkeydown = ev => {
