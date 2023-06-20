@@ -120,10 +120,11 @@ function backspace() {
     for(let i=1; i<text.children.length; i++) {
         if(text.children[i] == tab) {
             text.removeChild(text.children[i-1]);
+            updateText();
             return i-1;
         }
     }
-
+    
     return -1;
 }
 
