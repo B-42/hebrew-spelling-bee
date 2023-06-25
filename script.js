@@ -1,12 +1,15 @@
 //const LETTERS = 'מישהודי'.split(''),
-const LETTERS = 'אבהנצרי'.split(''),
+const LETTERS = [],
+EASY_LETTERS = 'איתנוהמ'.split(''),
+ALL_LETTERS = 'אבגדהוזחטיכלמנסעפצקרשת'.split(''),
+HARD_LETTERS = 'בגדזחטכלסעפצקרש'.split(''),
+NUM_EASY_LETTERS = Math.random() < .5 ? 2 : 3,
 MIN_LENGTH = 4,
 MAX_LENGTH = 20,
 LONG_WAIT = 600,
 MID_WAIT = 300,
 SHORT_WAIT = 100,
 CENTER_INDEX = 3,
-CENTER_LETTER = LETTERS[CENTER_INDEX],
 MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
 MSG_INVALID = 'לא במילון',
@@ -24,6 +27,19 @@ END_LETTER_PAIRS = [
 PAUSE_WHILE_MSG = false,
 BULLET = '•';
 
+for(let i=0; i<7; i++) {
+    let letter;
+    do {
+        if(i < NUM_EASY_LETTERS) {
+            letter = randItem(EASY_LETTERS);
+        } else {
+            letter = randItem(HARD_LETTERS);
+        }
+    } while(LETTERS.includes(letter));
+    LETTERS.push(letter);
+}
+
+const CENTER_LETTER = LETTERS[CENTER_INDEX];
 
 for(const pair of END_LETTER_PAIRS) {
     END_LETTERS_DICT[pair[0]] = pair[1];
@@ -258,7 +274,7 @@ function removeNiqqud(word) {
 }
 
 function formatWord(word){
-    word = removeNiqqud(word);
+    //word = removeNiqqud(word);
     // remove all spaces, commas, and periods and any other punctuation
     return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\|]/g,"");
 }
