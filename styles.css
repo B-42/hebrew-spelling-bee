@@ -3,6 +3,8 @@
     text-align: center;
     font-family: 'Heebo', sans-serif;
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
     align-items: center;
     justify-items: center;
 }
