@@ -8,11 +8,19 @@
     align-items: center;
     justify-items: center;
     touch-action: manipulation;
+    appearance: none;
+    position: relative;
+}
+
+body {
+    overflow: hidden;
 }
 
 button {
     touch-action: manipulation;
     appearance: none;
+    border: none;
+    color: black;
 }
 
 #container {
@@ -30,6 +38,7 @@ button {
 
 #beehive {
     margin-right: -60px;
+    height: 310px;
 }
 
 #beehive button {
@@ -40,6 +49,7 @@ button {
     border: none;
     font-size: 25pt;
     font-weight: 600;
+    appearance: none;
 }
 
 #beehive button.clicked {
@@ -93,16 +103,13 @@ button {
     100% {color: initial;}
 }
 
-#controls {
-    margin-top: 70px;
-}
-
 #controls button {
     border: none;
     height: 45px;
     border-radius: 25px;
     font-size: 15pt;
     transition: none;
+    appearance: none;
 }
 
 #controls button.clicked {
@@ -170,6 +177,7 @@ button {
 #input {
     flex-grow: 2;
     width: 20em;
+    height: fit-content;
 }
 
 #stats {
@@ -190,6 +198,7 @@ button {
 }
 
 #rankContainer {
+    position: relative;
     display: flex;
     width: 60%;
     margin-left: 20%;
@@ -197,6 +206,7 @@ button {
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 10px;
+    z-index: 5;
 }
 
 #bigScoreContainer {
@@ -248,7 +258,6 @@ button {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    z-index: 1;
 }
 
 #minButton {
@@ -273,13 +282,12 @@ button {
     margin: 10px;
 }
 
-hr {
+#rankLine {
     /*width: 53%;*/
     transform: translateY(25px);
     background-color: gray;
     border: none;
     height: 1px;
-    z-index: -1;
 }
 
 
@@ -291,12 +299,15 @@ hr {
     #stats {
         position: absolute;
         background-color: white;
-        top: 1em;
+        top: 5vh;
+        margin: 0;
         width: 80%;
         height: 90vh;
+        overflow-y: scroll;
     }
     #stats.minimized {
         height: 2em;
+        overflow-y: hidden;
     }
     #promptBar {
         z-index: 3;

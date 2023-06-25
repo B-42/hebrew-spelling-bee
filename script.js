@@ -357,5 +357,5 @@ function updateRank() {
 }
 
 function updateRankLine() {
-    rankLine.style.width = Math.abs(RANKS[0].html.dot.offsetLeft - RANKS.slice(-1)[0].html.dot.offsetLeft) + 'px';
+    rankLine.style.width = Math.abs(bounds(RANKS[0].html.dot).x - bounds(RANKS[RANKS.length - 1].html.dot).x) + 'px';
 }
