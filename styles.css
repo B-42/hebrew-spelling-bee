@@ -309,8 +309,9 @@ button:active {
         top: 5vh;
         margin: 0;
         width: 80%;
-        height: 90vh;
+        height: 80vh;
         overflow-y: scroll;
+        z-index: 2;
     }
     #stats.minimized {
         height: 2em;
@@ -321,6 +322,20 @@ button:active {
     }
     #promptBar.hide {
         z-index: -1;
+    }
+    button:hover {
+        outline: none;
+        box-shadow: none;
+    }
+    #beehive button:hover {
+        scale: 80%;
+        opacity: 75%;
+    }
+    #controls button:hover {
+        background-color: rgba(0,0,0,0.2);
+    }
+    body {
+        position: fixed;
     }
 }
 
