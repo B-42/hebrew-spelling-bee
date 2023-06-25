@@ -229,6 +229,8 @@ document.onkeydown = ev => {
     }
 }
 
+document.ondblclick = ev => ev.preventDefault();
+
 deleteButton.onclick = ev => buttonClick(ev, backspace);
 shuffleButton.onclick = ev => buttonClick(ev, () => {shuffleLetters(); updateButtons();});
 enterButton.onclick = ev => buttonClick(ev, checkWord);
