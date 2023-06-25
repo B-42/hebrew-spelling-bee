@@ -12,6 +12,7 @@
 
 button {
     touch-action: manipulation;
+    appearance: none;
 }
 
 #container {
