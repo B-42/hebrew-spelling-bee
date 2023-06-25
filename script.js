@@ -100,9 +100,9 @@ if(window.innerWidth <= 750)
     minimize();
 
 function buttonClick(ev, func) {
-    ev.target.classList.toggle('clicked');
+    //ev.target.classList.toggle('clicked');
     ev.target.blur();
-    setTimeout(()=>ev.target.classList.toggle('clicked'), SHORT_WAIT);
+    //setTimeout(()=>ev.target.classList.toggle('clicked'), SHORT_WAIT);
     func();
 }
 
