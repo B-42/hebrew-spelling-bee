@@ -21,6 +21,7 @@ button {
     appearance: none;
     border: none;
     color: black;
+    -webkit-tap-highlight-color: none;
 }
 
 button:active {
