@@ -21,7 +21,7 @@ button {
     appearance: none;
     border: none;
     color: black;
-    -webkit-tap-highlight-color: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 button:active {
@@ -111,6 +111,11 @@ button:active {
     100% {color: initial;}
 }
 
+#controls {
+    display: flex;
+    justify-content: center;
+}
+
 #controls button {
     border: none;
     height: 45px;
@@ -118,6 +123,7 @@ button:active {
     font-size: 15pt;
     transition: none;
     appearance: none;
+    margin: 5px;
 }
 
 #controls button:active {
@@ -128,7 +134,7 @@ button:active {
     width: 100px;
 }
 
-#shuffleButton { width: 45px; border-radius: 45px; }
+#shuffleButton { width: 45px; border-radius: 22.5px; }
 
 #promptBar {
     background-color: black;
@@ -194,9 +200,10 @@ button:active {
     width: 30em;
     flex-grow: 1;
     z-index: 5;
+    overflow-x: hidden;
 }
 
-#stats.minimized {display: initial;}
+#stats.minimized {display: initial; overflow: hidden;}
 
 #stats.minimized *:not(#minButton) {
     display: none;
@@ -289,6 +296,16 @@ button:active {
 
 #usedContainer {
     margin: 10px;
+    overflow-y: scroll;
+    position: relative;
+}
+
+#usedContainer::-webkit-scrollbar {
+    position: fixed;
+    right: 0;
+    top: 0; height: 100%;
+    width: 5px;
+    background-color: var(--yellow);
 }
 
 #rankLine {
@@ -304,6 +321,10 @@ button:active {
     #container {
         flex-direction: column-reverse;
         align-items: center;
+        justify-content: center;
+        width: 100vw; height: 100vh;
+        position: fixed;
+        left: 0; top: 0;
     }
     #stats {
         position: absolute;
@@ -312,12 +333,10 @@ button:active {
         margin: 0;
         width: 80%;
         height: 80vh;
-        overflow-y: scroll;
         z-index: 5;
     }
     #stats.minimized {
         height: 2em;
-        overflow-y: hidden;
     }
     #promptBar {
         z-index: 6;
