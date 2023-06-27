@@ -134,7 +134,11 @@ button:active {
     width: 100px;
 }
 
-#shuffleButton { width: 45px; border-radius: 22.5px; }
+#shuffleButton {
+    width: 45px; border-radius: 22.5px;
+    box-sizing: content-box;
+    padding: 0;
+}
 
 #promptBar {
     background-color: black;
