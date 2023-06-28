@@ -51,7 +51,7 @@ let isWaiting = false;
 
 shuffleLetters();
 
-if(true || isDateBeforeToday( new Date(localStorage.getItem(LAST_DATE_KEY)) )) {
+if(/*true || */isDateBeforeToday( new Date(localStorage.getItem(LAST_DATE_KEY)) )) {
     welcomeDialog.showModal();
 }
 localStorage.setItem(LAST_DATE_KEY, new Date().toString());
