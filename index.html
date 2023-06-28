@@ -13,6 +13,32 @@
     <script src="words.js" defer></script>
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
+    <dialog id="welcomeDialog">
+        <h1><mark>איות בכוורת</mark></h1>
+        <h2>חוקים:</h2>
+        <ul style="max-width: 30em;">
+            <li>מינימום <mark>4 אותיות</mark></li>
+            <li>חובה להשתמש <mark>באות האמצעית</mark></li>
+            <li style="text-align: right;">
+                <mark>פנגרם!</mark>
+                <ul>
+                    <li>
+                        מילה שכוללת את כל 7 האותיות
+                    </li>
+                    <li>
+                        פנגרם מושלם אם כל אות מופיעה פעם אחת
+                    </li>
+                    <li>
+                        נקודות בונוס
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <form method="dialog">
+            <button style="background-color: var(--yellow); border: 3px solid black; font-size: 15pt">אחלה</button>
+        </form>
+    </dialog>
+    <button id="dialogButton">?</button>
     <div id="container">
         <div id="input">
             <div id="promptBar" class="hide">חבל</div>

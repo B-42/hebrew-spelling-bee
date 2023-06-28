@@ -25,7 +25,8 @@ END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
 ],
 PAUSE_WHILE_MSG = false,
-BULLET = '•';
+BULLET = '•',
+LAST_DATE_KEY = 'lastDate';
 
 for(let i=0; i<7; i++) {
     let letter;
@@ -49,6 +50,11 @@ for(const pair of END_LETTER_PAIRS) {
 let isWaiting = false;
 
 shuffleLetters();
+
+if(true || isDateBeforeToday( new Date(localStorage.getItem(LAST_DATE_KEY)) )) {
+    welcomeDialog.showModal();
+}
+localStorage.setItem(LAST_DATE_KEY, new Date().toString());
 
 const beehive = get('beehive'),
 text = get('text');
@@ -95,6 +101,8 @@ updateRank(); updateRankLine();
 
 
 minButton.onclick = minimize;
+
+dialogButton.onclick = ev => welcomeDialog.showModal();
 
 if(window.innerWidth <= 750)
     minimize();

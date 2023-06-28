@@ -159,6 +159,7 @@ button:active {
     margin-bottom: 20px;
 }
 
+
 #promptBar.hide {opacity: 0;}
 
 #table {
@@ -320,8 +321,48 @@ button:active {
     height: 1px;
 }
 
+#welcomeDialog {
+    position: absolute;
+    direction: rtl;
+    left: 0; top: 0; width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+#welcomeDialog:not([open]) {
+    display: none;
+}
+
+#welcomeDialog>ul>* {
+    margin-bottom: 30px;
+}
+
+#welcomeDialog ul {
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+}
+
+#welcomeDialog * {
+    text-align: right;
+}
+
+#dialogButton {
+    position: absolute; left: 95vw; top: 90vh;
+    background-color: var(--yellow);
+    color: black;
+    font-size: 30px;
+    z-index: 9;
+    width: 40px; height: 40px; border-radius: 20px;
+}
+
+mark {
+    background-color: var(--yellow);
+}
 
 @media only screen and (max-width: 750px) {
+    #dialogButton {
+        left: 80vw;
+    }
     #container {
         flex-direction: column-reverse;
         align-items: center;
