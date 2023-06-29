@@ -8,4 +8,5 @@ randItem = arr => arr[Math.floor(Math.random() * arr.length)],
 bounds = el => el.getBoundingClientRect(),
 isDateBeforeToday = date => {
     return !date || new Date(date.toDateString()) < new Date(new Date().toDateString());
-}
+},
+getUniqueLetters = word => word.split('').filter((e,i,arr) => i == arr.indexOf(e))

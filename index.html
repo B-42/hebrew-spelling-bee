@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="styles.css"/>
     <script src="utils.js"></script>
     <script src="ranks.js"></script>
-    <script src="words.js" defer></script>
+    <script src="words.js"></script>
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
     <dialog id="welcomeDialog">
@@ -35,8 +35,17 @@
             </li>
         </ul>
         <form method="dialog">
-            <button style="background-color: var(--yellow); border: 3px solid black; font-size: 15pt">אחלה</button>
+            <button style="background-color: var(--yellow); border: 3px solid black; font-size: 15pt">
+                הבנתי
+            </button>
         </form>
+        <div id="surrenderContainer" style="display: flex; flex-direction: column; margin-top: 100px;">
+            <p>
+                אם התייאשתם:
+            </p>
+            <button id="surrenderButton" style="font-size: 16px;" onclick="surrenderText.classList.toggle('minimized')">גלו לי פנגרם</button>
+            <p id="surrenderText" class="minimized"></p>
+        </div>
     </dialog>
     <button id="dialogButton">?</button>
     <div id="container">

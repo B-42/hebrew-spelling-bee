@@ -1,10 +1,4 @@
-//const LETTERS = 'מישהודי'.split(''),
-const LETTERS = [],
-EASY_LETTERS = 'איתנוהמ'.split(''),
-ALL_LETTERS = 'אבגדהוזחטיכלמנסעפצקרשת'.split(''),
-HARD_LETTERS = 'בגדזחטכלסעפצקרש'.split(''),
-NUM_EASY_LETTERS = Math.random() < .5 ? 2 : 3,
-MIN_LENGTH = 4,
+const MIN_LENGTH = 4,
 MAX_LENGTH = 20,
 LONG_WAIT = 600,
 MID_WAIT = 300,
@@ -16,35 +10,52 @@ MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
 MSG_NO_CENTER = 'חובה להשתמש באות האמצעית',
 MSG_USED_WORD = 'השתמשת כבר במילה זו',
-usedWords = {},
+MSG_PANGRAM = '!פנגרם',
+usedWords = {}, history = [],
 RGX_HEB_LETTER = /[א-ת]/,
 RGX_END_NORMAL = /[מנצפכ]/,
 RGX_END_LAST = /[םןץףך]/,
-END_LETTERS_DICT = {},
 END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
 ],
+END_LETTERS_DICT = generateEndDict(),
+LETTERS = generatePuzzle()
 PAUSE_WHILE_MSG = false,
 BULLET = '•',
 LAST_DATE_KEY = 'lastDate';
 
-for(let i=0; i<7; i++) {
-    let letter;
+function generatePuzzle() {
+    while(!dictionary) {console.log('a')}
+    let letters;
+    const alphabet = Object.keys(dictionary);
     do {
-        if(i < NUM_EASY_LETTERS) {
-            letter = randItem(EASY_LETTERS);
-        } else {
-            letter = randItem(HARD_LETTERS);
-        }
-    } while(LETTERS.includes(letter));
-    LETTERS.push(letter);
+        let word = randItem( dictionary[randItem(alphabet)] );
+        letters = getUniqueLetters( replaceEndLetters( formatWord( word ) ) );
+        history.push(word);
+        surrenderText.innerText = word;
+    } while(letters.length != 7);
+    return letters;
+}
+
+function showHistory() {
+    console.log(history);
 }
 
 const CENTER_LETTER = LETTERS[CENTER_INDEX];
 
-for(const pair of END_LETTER_PAIRS) {
-    END_LETTERS_DICT[pair[0]] = pair[1];
-    END_LETTERS_DICT[pair[1]] = pair[0];
+function generateEndDict() {
+    const dict = {};
+    for(const pair of END_LETTER_PAIRS) {
+        dict[pair[0]] = pair[1];
+        dict[pair[1]] = pair[0];
+    }
+    return dict;
+}
+
+function replaceEndLetters(word) {
+    return word.split('').map(
+        letter => letter.match(RGX_END_LAST) ? END_LETTERS_DICT[letter] : letter
+    ).join('');
 }
 
 let isWaiting = false;
@@ -171,9 +182,9 @@ function updateButtons() {
     }
 }
 
-function resetText(message, duration = LONG_WAIT) {
+function resetText(message, duration = LONG_WAIT, golden = false) {
     //qsa('.row button').forEach(e=>e.onclick=null);
-    if(message) showPrompt(message);
+    if(message) showPrompt(message, duration, golden);
     setTimeout(() => {
         for(let i=text.children.length - 1; i >= 0; i--)
             if(text.children[i] != tab)
@@ -243,6 +254,10 @@ deleteButton.onclick = ev => buttonClick(ev, backspace);
 shuffleButton.onclick = ev => buttonClick(ev, () => {shuffleLetters(); updateButtons();});
 enterButton.onclick = ev => buttonClick(ev, checkWord);
 
+function wordIsValid(word) {
+    return dictionary[word[0]].includes(word);
+}
+
 function checkWord() {
     const word = formatWord( text.innerText );
 
@@ -251,14 +266,7 @@ function checkWord() {
         return;
     }
 
-    // get the first letter of the word
-    var firstLetter = word[0];
-
-    // Filter the words based on the starting letter
-    const filteredWords = dictionary[firstLetter];
-
-    // Check if the word is in the filtered list
-    var isValid = filteredWords.includes(word);
+    const isValid = wordIsValid(word);
 
     if(isValid) {
         if(!word.includes(CENTER_LETTER) && !word.includes(END_LETTERS_DICT[CENTER_LETTER])) {
@@ -272,6 +280,10 @@ function checkWord() {
         addWord(word);
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
+        if(isPangram(word)) {
+            resetText(MSG_PANGRAM, LONG_WAIT, true);
+            return;
+        }
     }
     
     resetText(isValid ? '' : MSG_INVALID, isValid ? 0 : LONG_WAIT);
@@ -284,17 +296,17 @@ function removeNiqqud(word) {
 }
 
 function formatWord(word){
-    //word = removeNiqqud(word);
-    // remove all spaces, commas, and periods and any other punctuation
-    return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\|]/g,"");
+    return word.replace(/[^א-ת]/g,"");
 }
 
-function showPrompt(message, duration=LONG_WAIT) {
+function showPrompt(message, duration=LONG_WAIT, golden=false) {
     promptBar.innerText = message;
     promptBar.classList.toggle('hide');
+    if(golden) promptBar.classList.toggle('golden');
     isWaiting = true;
     setTimeout(()=>{
         promptBar.classList.toggle('hide');
+        if(golden) promptBar.classList.toggle('golden');
         isWaiting = false;
     }, duration);
 }
@@ -341,7 +353,14 @@ function updateTable() {
 }
 
 function scoreWord(word) {
-    return word.length == MIN_LENGTH ? 1 : word.length;
+    const points = word.length == MIN_LENGTH ? 1 : word.length,
+        bonusPoints = isPangram(word) ? 7 : 0;
+    return points + bonusPoints;
+}
+
+function isPangram(word) {
+    word = replaceEndLetters(word);
+    return LETTERS.every(letter=>word.includes(letter));
 }
 
 function updateRank() {
