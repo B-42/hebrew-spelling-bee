@@ -155,7 +155,7 @@ button:active {
     position: relative;
     left: 50%;
     line-height: 28pt;
-    transform: translate(-50%, 0);
+    translate: -50% 0;
     margin-bottom: 20px;
 }
 
