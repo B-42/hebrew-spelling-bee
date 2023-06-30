@@ -1,0 +1,1 @@
+const RANKS = [{"title":"סביר מינוס","minScore":"2"},{"title":"סביר פלוס","minScore":"10"},{"title":"נחמד","minScore":"20"},{"title":"יפה","minScore":"30"},{"title":"חכמולוג","minScore":"50"},{"title":"אדיר","minScore":"65"},{"title":"תותח על","minScore":"80"},{"title":"גאון עולמי","minScore":"100"},{"title":"מלך היקום","minScore":"140"}];
