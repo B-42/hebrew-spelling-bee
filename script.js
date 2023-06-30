@@ -22,7 +22,11 @@ END_LETTERS_DICT = generateEndDict(),
 LETTERS = generatePuzzle()
 PAUSE_WHILE_MSG = false,
 BULLET = '•',
-LAST_DATE_KEY = 'lastDate';
+LAST_DATE_KEY = 'lastDate',
+JOURNAL_LEGEND = {
+    1: "עדכונים חשובים",
+    2: "חנונים בלבד"
+};
 
 function generatePuzzle() {
     while(!dictionary) {console.log('a')}
@@ -385,4 +389,33 @@ function updateRank() {
 
 function updateRankLine() {
     rankLine.style.width = Math.abs(bounds(RANKS[0].html.dot).x - bounds(RANKS[RANKS.length - 1].html.dot).x) + 'px';
+}
+
+function journalSetup() {
+    journalContainer.innerHTML = '';
+    for(const {date, entries} of JOURNAL) {
+        const dailyArticle = make('article'),
+            dateElm = make('h4');
+        dateElm.innerText = date;
+        dailyArticle.appendChild(dateElm);
+
+        for(const entryKey in entries) {
+            const details = make('details'),
+                summary = make('summary'),
+                ul = make('ul');
+            summary.innerText = JOURNAL_LEGEND[entryKey];
+            details.appendChild(summary);
+
+            for(const entry of entries[entryKey]) {
+                const li = make('li');
+                li.innerText = entry;
+                ul.appendChild(li);
+            }
+            details.appendChild(ul);
+
+            dailyArticle.appendChild(details);
+        }
+        
+        journalContainer.appendChild(dailyArticle);
+    }
 }

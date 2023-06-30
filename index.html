@@ -11,6 +11,7 @@
     <script src="utils.js"></script>
     <script src="ranks.js"></script>
     <script src="words.js"></script>
+    <script src="journal.js" defer onload="journalSetup()"></script>
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
     <dialog id="welcomeDialog">
@@ -35,7 +36,7 @@
             </li>
         </ul>
         <form method="dialog">
-            <button style="background-color: var(--yellow); border: 3px solid black; font-size: 15pt">
+            <button>
                 הבנתי
             </button>
         </form>
@@ -49,7 +50,19 @@
             <p id="surrenderText" class="minimized"></p>
         </div>
     </dialog>
-    <button id="dialogButton">?</button>
+    <dialog id="journalDialog">
+        <h2>יומן עדכונים</h2>
+        <div id="journalContainer" style="max-width: 30em; margin: 2em;">
+        </div>
+        <form method="dialog">
+            <button>X</button>
+        </form>
+    </dialog>
+    <div id="extras">
+        <button id="dialogButton">❓</button>
+        <button id="journalButton" onclick="journalDialog.showModal();"
+        style="background: white;">📖</button>
+    </div>
     <div id="container">
         <div id="input">
             <div id="promptBar" class="hide">חבל</div>

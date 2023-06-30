@@ -2,7 +2,6 @@ const fs = require('fs');
 const READ_ADDRESS = './ranks.txt';
 const WRITE_ADDRESS = '../ranks.js';
 
-// [titlesListString, minScoresListString]
 const data = fs.readFileSync(READ_ADDRESS, 'utf-8').split('\r\n');
 
 const RANKS = data.map(str => (

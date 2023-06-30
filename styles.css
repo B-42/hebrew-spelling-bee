@@ -14,6 +14,7 @@
 
 body {
     overflow: hidden;
+    position: relative;
 }
 
 button {
@@ -210,9 +211,10 @@ button:active {
 #stats {
     border: 1px solid gray;
     border-radius: 5px;
+    background-color: white;
     width: 30em;
     flex-grow: 1;
-    z-index: 5;
+    z-index: 2;
     overflow-x: hidden;
 }
 
@@ -283,6 +285,7 @@ button:active {
 
 .rankdiv {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -331,7 +334,7 @@ button:active {
     height: 1px;
 }
 
-#welcomeDialog {
+#welcomeDialog, #journalDialog {
     position: absolute;
     direction: rtl;
     left: 0; top: 0; width: 100%; height: 100%;
@@ -340,7 +343,7 @@ button:active {
     text-align: right;
 }
 
-#welcomeDialog:not([open]) {
+#welcomeDialog:not([open]), #journalDialog:not([open]) {
     display: none;
 }
 
@@ -348,27 +351,50 @@ button:active {
     margin-bottom: 30px;
 }
 
-#welcomeDialog ul {
-    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+form button {
+    background-color: var(--yellow); border: 3px solid black; font-size: 15pt
+}
+
+ul {
+    display: flex; flex-direction: column; align-items: flex-start;
+    text-align: right;
 }
 
 #welcomeDialog * {
     text-align: right;
 }
 
-#dialogButton {
-    position: absolute; left: 95vw; top: 90vh;
-    background-color: var(--yellow);
-    color: black;
-    font-size: 30px;
-    font-weight: bolder;
-    z-index: 8;
-    width: 45px; height: 45px; border-radius: 30px;
-    transition: .3s;
+#journalDialog li {
+    text-align: right; margin: 10px;
 }
 
-#dialogButton:hover {
-    translate: 0 -5px;
+#extras {
+    position: absolute; right: 10px; top: 80vh;
+    transition: .3s;
+    width: 200px;
+    font-weight: bolder;
+    z-index: 1;
+    display: flex;
+    direction: rtl;
+}
+
+#extras button {
+    font-size: 25px;
+    background-color: var(--yellow);
+    color: black;
+    border-radius: 25px;
+    height: 40px;
+    margin: 5px;
+    box-shadow: 0px 4px 0px lightgray;
+}
+
+#dialogButton, #journalButton {
+    width: 45px; height: 45px;
+}
+
+#extras button:hover {
+    translate: 0 5px;
+    box-shadow: none;
 }
 
 mark {
@@ -376,11 +402,6 @@ mark {
 }
 
 @media only screen and (max-width: 750px) {
-    #dialogButton {
-        left: 78vw; top: 78vh; z-index: 8;
-    }
-    #dialogButton:hover {translate: none;}
-    #dialogButton:active {translate: 0 -10px;}
     #container {
         flex-direction: column-reverse;
         align-items: center;
@@ -396,7 +417,6 @@ mark {
         margin: 0;
         width: 80%;
         height: 80vh;
-        z-index: 5;
     }
     #stats.minimized {
         height: 2em;
@@ -406,9 +426,6 @@ mark {
     }
     #promptBar.hide {
         z-index: -1;
-    }
-    body {
-        position: fixed;
     }
 }
 
