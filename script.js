@@ -1,8 +1,8 @@
 const MIN_LENGTH = 4,
 MAX_LENGTH = 20,
-LONG_WAIT = 600,
-MID_WAIT = 300,
-SHORT_WAIT = 200,
+LONG_WAIT = 700,
+MID_WAIT = 600,
+SHORT_WAIT = 400,
 CENTER_INDEX = 3,
 MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
@@ -277,7 +277,7 @@ function checkWord() {
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
         if(isPangram(word)) {
-            resetText(MSG_PANGRAM, LONG_WAIT, true);
+            resetText(MSG_PANGRAM, MID_WAIT, true);
             return;
         }
     }
