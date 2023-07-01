@@ -11,7 +11,6 @@
     <script src="utils.js"></script>
     <script src="ranks.js"></script>
     <script src="words.js"></script>
-    <script src="journal.js" defer onload="journalSetup()"></script>
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
     <dialog id="welcomeDialog">
@@ -50,18 +49,8 @@
             <p id="surrenderText" class="minimized"></p>
         </div>
     </dialog>
-    <dialog id="journalDialog">
-        <h2>יומן עדכונים</h2>
-        <div id="journalContainer" style="max-width: 30em; margin: 2em;">
-        </div>
-        <form method="dialog">
-            <button>X</button>
-        </form>
-    </dialog>
     <div id="extras">
-        <button id="dialogButton">❓</button>
-        <button id="journalButton" onclick="journalDialog.showModal();"
-        style="background: white; display: none;">📖</button>
+        <button id="dialogButton">?</button>
     </div>
     <div id="container">
         <div id="input">
@@ -79,21 +68,26 @@
                 <button id="enterButton">בדוק</button>
             </div>
         </div>
-        <div id="stats">
-            <button id="minButton">˅</button>
-            <div id="rankScoreContainer">
-                <hr id="rankLine">
+        <div id="statsAndRank">  
+            <div id="bigRankContainer">
+                <label id="rankTitle"></label>
+                <hr id="rankLine"> 
                 <div id="rankContainer">
                 </div>
-                <div id="bigScoreContainer">
-                    <div id="scoreContainer">
-                        <span id="scoreText">0</span> :נקודות
+            </div>
+            <div id="stats">
+                <button id="minButton">˅</button>
+                <div id="rankScoreContainer" style="opacity:0; height: 0; overflow: hidden;">
+                    <div id="bigScoreContainer">
+                        <div id="scoreContainer">
+                            <span id="scoreText">0</span> :נקודות
+                        </div>
                     </div>
                 </div>
-            </div>
-            <h2 id="usedTitle" class="minimized">מילים נכונות</h2>
-            <div id="usedContainer">
-                <table id="table"></table>
+                <h2 id="usedTitle" class="minimized">מילים נכונות</h2>
+                <div id="usedContainer">
+                    <table id="table"></table>
+                </div>
             </div>
         </div>
     </div>

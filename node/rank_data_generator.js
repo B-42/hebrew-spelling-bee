@@ -6,8 +6,8 @@ const data = fs.readFileSync(READ_ADDRESS, 'utf-8').split('\r\n');
 
 const RANKS = data.map(str => (
     {
-        title: str.match(/[^\d]+/),
-        minScore: Math.floor( str.match(/\d+/) )
+        title: str.match(/[^\d]+/)[0],
+        minScore: Math.floor( str.match(/\d+/)[0] )
     }
 ));
 

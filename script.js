@@ -2,10 +2,11 @@ const MIN_LENGTH = 4,
 MAX_LENGTH = 20,
 LONG_WAIT = 600,
 MID_WAIT = 300,
-SHORT_WAIT = 100,
+SHORT_WAIT = 200,
 CENTER_INDEX = 3,
 MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
+MSG_VALID = '!נכון',
 MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
 MSG_NO_CENTER = 'חובה להשתמש באות האמצעית',
@@ -97,22 +98,13 @@ for(const rank of RANKS) {
     //rankDot.innerText = BULLET;
     rankDot.classList.add('rankdot');
 
-    const rankWord = make('span');
-    rankWord.innerText = rank.title;
-    rankWord.classList.add('rankword');
-
-    const rankDiv = make('div');
-    rankDiv.appendChild(rankDot);
-    rankDiv.appendChild(rankWord);
-    rankDiv.classList.add('rankdiv');
-
     //rankDots.insertBefore(rankDot, rankDots.children[0]);
     //rankWords.appendChild(rankWord);
-    rankContainer.insertBefore(rankDiv, rankContainer.children[0]);
+    rankContainer.insertBefore(rankDot, rankContainer.children[0]);
 
-    rank.html = {dot: rankDot, word: rankWord, div: rankDiv};
+    rank.html = {dot: rankDot};
 }
-updateRank(); updateRankLine();
+updateRank();
 
 
 minButton.onclick = minimize;
@@ -290,7 +282,7 @@ function checkWord() {
         }
     }
     
-    resetText(isValid ? '' : MSG_INVALID, isValid ? 0 : LONG_WAIT);
+    resetText(isValid ? MSG_VALID : MSG_INVALID, isValid ? SHORT_WAIT : LONG_WAIT, isValid);
 }
 
 function removeNiqqud(word) {
@@ -375,7 +367,6 @@ function updateRank() {
             rank.html.dot.classList.add('completed');
             rank.html.dot.innerText = '';
             rank.html.dot.classList.remove('current');
-            rank.html.word.classList.remove('current');
             maxRank = rank;
         }
     }
@@ -383,39 +374,17 @@ function updateRank() {
     if(maxRank) {
         maxRank.html.dot.classList.add('current');
         maxRank.html.dot.innerText = score;
-        maxRank.html.word.classList.add('current');
+        rankTitle.innerText = maxRank.title;
     }
+
+    setTimeout(updateRankLine, SHORT_WAIT);
 }
 
 function updateRankLine() {
-    rankLine.style.width = Math.abs(bounds(RANKS[0].html.dot).x - bounds(RANKS[RANKS.length - 1].html.dot).x) + 'px';
-}
-
-function journalSetup() {
-    journalContainer.innerHTML = '';
-    for(const {date, entries} of JOURNAL) {
-        const dailyArticle = make('article'),
-            dateElm = make('h4');
-        dateElm.innerText = date;
-        dailyArticle.appendChild(dateElm);
-
-        for(const entryKey in entries) {
-            const details = make('details'),
-                summary = make('summary'),
-                ul = make('ul');
-            summary.innerText = JOURNAL_LEGEND[entryKey];
-            details.appendChild(summary);
-
-            for(const entry of entries[entryKey]) {
-                const li = make('li');
-                li.innerText = entry;
-                ul.appendChild(li);
-            }
-            details.appendChild(ul);
-
-            dailyArticle.appendChild(details);
-        }
-        
-        journalContainer.appendChild(dailyArticle);
-    }
+    const dot0 = RANKS[0].html.dot,
+        dot1 = RANKS[RANKS.length-1].html.dot,
+        bounds0 = bounds(dot0),
+        bounds1 = bounds(dot1);
+    rankLine.style.width = dot0.offsetLeft - dot1.offsetLeft + 'px';
+    rankLine.style.left = dot1.offsetLeft + dot1.offsetWidth/2 + dot1.offsetParent.offsetLeft + "px";
 }

@@ -170,9 +170,6 @@ button:active {
 #promptBar.hide {opacity: 0;}
 
 #table {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
     overflow-x: scroll;
 }
 
@@ -228,15 +225,24 @@ button:active {
     color: var(--yellow);
 }
 
+#bigRankContainer {
+    top: 0;
+    width: 30em;
+    display: flex; flex-direction: row;
+}
+
+#rankTitle {
+    flex-grow: 1;
+}
+
 #rankContainer {
+    flex-grow: 2;
     position: relative;
     display: flex;
-    width: 60%;
-    margin-left: 20%;
     align-items: flex-start;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 10px;
     z-index: 5;
 }
 
@@ -262,6 +268,7 @@ button:active {
     border-radius: var(--radius);
     font-size: 10pt;
     line-height: 24pt;
+    margin: 10px;
 }
 
 .rankdot.completed, .rankdot.current {
@@ -270,26 +277,7 @@ button:active {
 
 .rankdot.current {
     --radius: 30px;
-    margin-top: -9px;
-}
-
-.rankword.current {
-    opacity: 100%;
-}
-
-.rankword {
-    opacity: 0;
-    margin-top: 4px;
-    width: 30px;
-}
-
-.rankdiv {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
+    margin-top: 0px;
 }
 
 #minButton {
@@ -299,11 +287,13 @@ button:active {
     font-size: 15pt;
     margin: .1rem;
     color: gray;
-    transform: scaleX(200%) scaleY(-100%);
+    scale: 200% 100%;
+    rotate: -180deg;
+    transition: .2s;
 }
 
 #minButton.clicked {
-    transform: scaleX(200%);
+    rotate: 0deg;
 }
 
 .minimized {
@@ -327,8 +317,7 @@ button:active {
 }
 
 #rankLine {
-    /*width: 53%;*/
-    transform: translateY(25px);
+    position: absolute;
     background-color: gray;
     border: none;
     height: 1px;
@@ -401,6 +390,10 @@ mark {
     background-color: var(--yellow);
 }
 
+#statsAndRank {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
 @media only screen and (max-width: 750px) {
     #container {
         flex-direction: column-reverse;
@@ -410,12 +403,20 @@ mark {
         position: fixed;
         left: 0; top: 0;
     }
-    #stats {
+    #statsAndRank {
         position: absolute;
+        top: 0;
+    }
+    #input {
+        margin-top: 100px;
+    }
+    #bigRankContainer {
+        width: 80vw;
+    }
+    #stats {
         background-color: white;
-        top: 5vh;
         margin: 0;
-        width: 80%;
+        width: 80vw;
         height: 80vh;
     }
     #stats.minimized {
