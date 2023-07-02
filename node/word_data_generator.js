@@ -1,6 +1,9 @@
 const fs = require('fs');
 const READ_ADDRESS = './all_no_fatverb.txt';
-const WRITE_ADDRESS = '../words.js';
+const WRITE_ADDRESS = '../words.js',
+FLAGGED = [
+    "גרסהאחדאחד"
+];
 
 const words = fs.readFileSync(READ_ADDRESS, 'utf-8').split('\n');
 const newWords = {};
@@ -8,7 +11,7 @@ const newWords = {};
 console.log('starting ...');
 
 for(const word of words) {
-    if(word.match(/"/g)) continue;
+    if(word.match(/"/g) || FLAGGED.includes(word)) continue;
     if(!newWords[word[0]]) newWords[word[0]] = [];
     newWords[word[0]].push(word);
 }

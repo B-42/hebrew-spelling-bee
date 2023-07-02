@@ -16,7 +16,7 @@ usedWords = {}, history = [],
 RGX_HEB_LETTER = /[א-ת]/,
 RGX_END_NORMAL = /[מנצפכ]/,
 RGX_END_LAST = /[םןץףך]/,
-RGX_POSSESIVES = /(י?(((ה|כ)[םן]?)|יך?|ך|נו|ו)|ם|ן)$/g,
+RGX_POSSESIVES = /(י?(((ה|כ)[םן]?)|יך?|ך|נו|ו)|ם|ן|ת)$/g,
 END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
 ],
