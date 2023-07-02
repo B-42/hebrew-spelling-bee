@@ -12,11 +12,12 @@ MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
 MSG_USED_WORD = 'השתמשת כבר במילה זו',
 MSG_PANGRAM = '!פנגרם',
+MSG_POSSESSIVES = 'בלי סיומות שייכות',
 usedWords = {}, history = [],
 RGX_HEB_LETTER = /[א-ת]/,
 RGX_END_NORMAL = /[מנצפכ]/,
 RGX_END_LAST = /[םןץףך]/,
-RGX_POSSESIVES = /(י?(((ה|כ)[םן]?)|יך?|ך|נו|ו)|ם|ן|ת)$/g,
+RGX_POSSESSIVES = /(י?(((ה|כ)[םן]?)|יך?|ך|נו|ו)|ם|ן|ת)$/g,
 END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
 ],
@@ -24,11 +25,7 @@ END_LETTERS_DICT = generateEndDict(),
 LETTERS = generatePuzzle()
 PAUSE_WHILE_MSG = false,
 BULLET = '•',
-LAST_DATE_KEY = 'lastDate',
-JOURNAL_LEGEND = {
-    1: "עדכונים חשובים",
-    2: "חנונים בלבד"
-};
+LAST_DATE_KEY = 'lastDate';
 
 function generatePuzzle() {
     while(!dictionary) {console.log('a')}
@@ -50,8 +47,11 @@ function showHistory() {
 
 const CENTER_LETTER = LETTERS[CENTER_INDEX],
 MSG_NO_CENTER = 'נחשו מילה עם ' + "<strong class='big'>"+CENTER_LETTER+"</strong>";
-surrenderText.innerText = history.slice(-1)[0];
-usedSpan.innerText = CENTER_LETTER;
+usedSpan.innerText = CENTER_LETTER,
+SOLVED = solvePuzzle();
+surrenderButton.onclick = ev => {
+    surrenderText.innerText = randItem(SOLVED.solutions);
+}
 
 function generateEndDict() {
     const dict = {};
@@ -278,6 +278,10 @@ function checkWord() {
             resetText(MSG_USED_WORD);
             return;
         }
+        /*if(word.match(RGX_POSSESSIVES)) {
+            resetText(MSG_POSSESSIVES);
+            return;
+        }*/
         addWord(word);
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
@@ -395,4 +399,18 @@ function updateRankLine() {
         bounds1 = bounds(dot1);
     rankLine.style.width = dot0.offsetLeft - dot1.offsetLeft + 'px';
     rankLine.style.left = dot1.offsetLeft + dot1.offsetWidth/2 + dot1.offsetParent.offsetLeft + "px";
+}
+
+function solvePuzzle() {
+    const solutions = [];
+    for(const letter in dictionary) {
+        for(const word of dictionary[letter]) {
+            if(word.length >= MIN_LENGTH
+                && word.includes(CENTER_LETTER)
+                /*&& !word.match(RGX_POSSESSIVES)*/
+                && word.split('').every(ltr=>LETTERS.includes(ltr)))
+                solutions.push(word);
+        }
+    }
+    return {solutions, maxScore: solutions.map(scoreWord).reduce((a,b)=>a+b)};
 }
