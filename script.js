@@ -1,21 +1,22 @@
 const MIN_LENGTH = 4,
 MAX_LENGTH = 20,
-LONG_WAIT = 700,
-MID_WAIT = 600,
-SHORT_WAIT = 400,
+LONG_WAIT = 1000,
+MID_WAIT = 750,
+SHORT_WAIT = 500,
+MICRO_WAIT = 100,
 CENTER_INDEX = 3,
 MSG_TOO_LONG = 'ארוך מדי',
 MSG_TOO_SHORT = 'קצר מדי',
 MSG_VALID = '!נכון',
 MSG_INVALID = 'לא במילון',
 MSG_INVALID_KEY = 'לא במחסן האותיות',
-MSG_NO_CENTER = 'חובה להשתמש באות האמצעית',
 MSG_USED_WORD = 'השתמשת כבר במילה זו',
 MSG_PANGRAM = '!פנגרם',
 usedWords = {}, history = [],
 RGX_HEB_LETTER = /[א-ת]/,
 RGX_END_NORMAL = /[מנצפכ]/,
 RGX_END_LAST = /[םןץףך]/,
+RGX_POSSESIVES = /(י?(((ה|כ)[םן]?)|יך?|ך|נו|ו)|ם|ן)$/g,
 END_LETTER_PAIRS = [
     'מם', 'נן', 'צץ', 'פף', 'כך'
 ],
@@ -31,13 +32,14 @@ JOURNAL_LEGEND = {
 
 function generatePuzzle() {
     while(!dictionary) {console.log('a')}
-    let letters;
+    let letters = [];
     const alphabet = Object.keys(dictionary);
     do {
         let word = randItem( dictionary[randItem(alphabet)] );
+        if(word.match(RGX_POSSESIVES))
+            continue;
         letters = getUniqueLetters( replaceEndLetters( formatWord( word ) ) );
         history.push(word);
-        surrenderText.innerText = word;
     } while(letters.length != 7);
     return letters;
 }
@@ -46,7 +48,10 @@ function showHistory() {
     console.log(history);
 }
 
-const CENTER_LETTER = LETTERS[CENTER_INDEX];
+const CENTER_LETTER = LETTERS[CENTER_INDEX],
+MSG_NO_CENTER = 'נחשו מילה עם ' + "<strong class='big'>"+CENTER_LETTER+"</strong>";
+surrenderText.innerText = history.slice(-1)[0];
+usedSpan.innerText = CENTER_LETTER;
 
 function generateEndDict() {
     const dict = {};
@@ -109,7 +114,7 @@ updateRank();
 
 minButton.onclick = minimize;
 
-dialogButton.onclick = ev => welcomeDialog.showModal();
+dialogButton.onclick = ev => buttonClick(ev, () => welcomeDialog.showModal());
 
 if(window.innerWidth <= 750)
     minimize();
@@ -165,28 +170,28 @@ function shuffleLetters() {
     } while(LETTERS[CENTER_INDEX] != CENTER_LETTER);
 }
 
-function updateButtons() {
+function updateButtons(duration=LONG_WAIT) {
     for(const i of range(7)) {
         const button = get('button' + (i+1));
-        button.style.animation = `fade-out-in ${LONG_WAIT*2/1000}s ease-out`;
+        button.style.animation = `fade-out-in ${duration/1000}s ease-out`;
         setTimeout(() => {
             button.innerText = LETTERS[i];
-        }, LONG_WAIT);
+        }, duration/2);
         setTimeout(() => {
             button.style.animation = `none`;
-        }, LONG_WAIT*2 + 1);
+        }, duration + 1);
     }
 }
 
-function resetText(message, duration = LONG_WAIT, golden = false) {
+function resetText(message, duration = LONG_WAIT, classes='') {
     //qsa('.row button').forEach(e=>e.onclick=null);
-    if(message) showPrompt(message, duration, golden);
+    if(message) showPrompt(message, duration, classes);
     setTimeout(() => {
         for(let i=text.children.length - 1; i >= 0; i--)
             if(text.children[i] != tab)
                 text.removeChild(text.children[i]);
         //qsa('.row button').forEach(e=>e.onclick=letterClicked);
-    }, duration);
+    }, MICRO_WAIT);
 }
 
 function updateText() {
@@ -247,7 +252,7 @@ document.onkeydown = ev => {
 document.ondblclick = ev => ev.preventDefault();
 
 deleteButton.onclick = ev => buttonClick(ev, backspace);
-shuffleButton.onclick = ev => buttonClick(ev, () => {shuffleLetters(); updateButtons();});
+shuffleButton.onclick = ev => buttonClick(ev, () => {shuffleLetters(); updateButtons(MID_WAIT);});
 enterButton.onclick = ev => buttonClick(ev, checkWord);
 
 function wordIsValid(word) {
@@ -277,12 +282,12 @@ function checkWord() {
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
         if(isPangram(word)) {
-            resetText(MSG_PANGRAM, MID_WAIT, true);
+            resetText(MSG_PANGRAM, MID_WAIT, 'golden big');
             return;
         }
     }
     
-    resetText(isValid ? MSG_VALID : MSG_INVALID, isValid ? SHORT_WAIT : LONG_WAIT, isValid);
+    resetText(isValid ? MSG_VALID : MSG_INVALID, isValid ? SHORT_WAIT : LONG_WAIT, isValid ? 'golden' : '');
 }
 
 function removeNiqqud(word) {
@@ -295,20 +300,23 @@ function formatWord(word){
     return word.replace(/[^א-ת]/g,"");
 }
 
-function showPrompt(message, duration=LONG_WAIT, golden=false) {
-    promptBar.innerText = message;
+function showPrompt(message, duration=LONG_WAIT, classes='') {
+    promptBar.innerHTML = message;
     promptBar.classList.toggle('hide');
-    if(golden) promptBar.classList.toggle('golden');
+    classes = classes.split(' ').filter(e=>e.length);
+    if(classes.length)
+        classes.forEach(classname => promptBar.classList.toggle(classname));
     isWaiting = true;
     setTimeout(()=>{
         promptBar.classList.toggle('hide');
-        if(golden) promptBar.classList.toggle('golden');
+        if(classes.length)
+            classes.forEach(classname => promptBar.classList.toggle(classname));
         isWaiting = false;
     }, duration);
 }
 
 function addWord(word) {
-    usedTitle.classList.remove('minimized');
+    //usedTitle.classList.remove('minimized');
 
     if(!usedWords[word.length])
         usedWords[word.length] = [];

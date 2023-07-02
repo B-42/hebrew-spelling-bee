@@ -8,14 +8,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css"/>
+    <link rel="icon" type="image/png" href="assets/logo.png">
     <script src="utils.js"></script>
     <script src="ranks.js"></script>
     <script src="words.js"></script>
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
     <dialog id="welcomeDialog">
+        <img src="assets/logo.png" style="width: 5em; height: 5em;">
         <h1><mark>איות בכוורת</mark></h1>
-        <h2>חוקים:</h2>
+        <h2 style="margin-bottom: 0;">חוקים:</h2>
         <ul style="max-width: 30em;">
             <li>מינימום <mark>4 אותיות</mark></li>
             <li>חובה להשתמש <mark>באות האמצעית</mark></li>
@@ -39,14 +41,16 @@
                 הבנתי
             </button>
         </form>
-        <div id="surrenderContainer" style="display: flex; flex-direction: column; margin-top: 100px;">
-            <p>
+        <div id="surrenderContainer" style="display: flex; flex-direction: column; margin-top: 50px;">
+            <p style="margin-bottom: 0;">
                 אם התייאשתם:
             </p>
-            <button id="surrenderButton" style="font-size: 16px;" onclick="surrenderText.classList.toggle('minimized')">
-                גלו לי מילה
-            </button>
-            <p id="surrenderText" class="minimized"></p>
+            <div style="display:flex; flex-direction: row;">
+                <button id="surrenderButton" style="font-size: 16px; margin: 1em;" onclick="surrenderText.classList.toggle('minimized')">
+                    גלו לי מילה
+                </button>
+                <p id="surrenderText" class="minimized"></p>
+            </div>
         </div>
     </dialog>
     <div id="extras">
@@ -63,7 +67,7 @@
             <div id="controls">
                 <button id="deleteButton">מחק</button>
                 <button id="shuffleButton">
-                    <img src="shuffle_icon.svg" style="max-width: 55%; position: absolute; left: 50%; top: 50%; translate: -50% -50%;"></img>
+                    <img src="assets/shuffle_icon.svg" style="max-width: 55%; position: absolute; left: 50%; top: 50%; translate: -50% -50%;"></img>
                 </button>
                 <button id="enterButton">בדוק</button>
             </div>
@@ -84,7 +88,8 @@
                         </div>
                     </div>
                 </div>
-                <h2 id="usedTitle" class="minimized">מילים נכונות</h2>
+                <h2 id="usedTitle">מילים נכונות</h2>
+                <p id="usedSubtitle">נסו לנחש מילים עם האות <strong><mark class="big" id="usedSpan"></mark></strong></p>
                 <div id="usedContainer">
                     <table id="table"></table>
                 </div>
