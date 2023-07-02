@@ -36,8 +36,8 @@ function generatePuzzle() {
     const alphabet = Object.keys(dictionary);
     do {
         let word = randItem( dictionary[randItem(alphabet)] );
-        if(word.match(RGX_POSSESIVES))
-            continue;
+        /*if(word.match(RGX_POSSESIVES))
+            continue;*/
         letters = getUniqueLetters( replaceEndLetters( formatWord( word ) ) );
         history.push(word);
     } while(letters.length != 7);
