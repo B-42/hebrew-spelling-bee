@@ -365,14 +365,15 @@ ul {
     z-index: 1;
     display: flex;
     direction: rtl;
+    overflow: hidden;
 }
 
 #extras button {
     font-size: 25px;
     background-color: var(--yellow);
+    text-align: center;
     color: black;
     border-radius: 25px;
-    height: 40px;
     margin: 5px;
     box-shadow: 0px 4px 0px lightgray;
 }
@@ -393,6 +394,10 @@ mark {
 
 .big {
     padding: .2em; font-size: 1.2em;
+}
+
+.bold {
+    font-weight: bolder;
 }
 
 #statsAndRank {

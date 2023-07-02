@@ -282,7 +282,7 @@ function checkWord() {
         scoreText.innerText = Math.floor(scoreText.innerText) + scoreWord(word);
         updateRank();
         if(isPangram(word)) {
-            resetText(MSG_PANGRAM, MID_WAIT, 'golden big');
+            resetText(MSG_PANGRAM, MID_WAIT, 'golden big bold');
             return;
         }
     }
