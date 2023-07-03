@@ -80,7 +80,10 @@
                 </div>
             </div>
             <div id="stats">
-                <button id="minButton">˅</button>
+                <div id="minView">
+                    <p id="useCenterMessage" style="flex-grow: 3; text-align: left; padding-left: 1em;">נסו לנחש מילים עם האות <strong><mark class="big" id="usedSpan"></mark></strong></p>
+                    <button id="minButton">˅</button>
+                </div>
                 <div id="rankScoreContainer" style="opacity:0; height: 0; overflow: hidden;">
                     <div id="bigScoreContainer">
                         <div id="scoreContainer">
@@ -89,7 +92,9 @@
                     </div>
                 </div>
                 <h2 id="usedTitle">מילים נכונות</h2>
-                <p id="usedSubtitle">נסו לנחש מילים עם האות <strong><mark class="big" id="usedSpan"></mark></strong></p>
+                <h4>
+                    מצאת <span id="usedCounter">0</span> מילים
+                </h4>
                 <div id="usedContainer">
                     <table id="table"></table>
                 </div>

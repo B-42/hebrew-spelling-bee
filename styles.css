@@ -159,6 +159,13 @@ button:active {
     margin-bottom: 20px;
 }
 
+#promptBar.big {
+    font-size: 15pt;
+    height: 40px;
+    padding: .2em;
+    margin-bottom: calc(20px - .4em);
+}
+
 #promptBar.golden {
     background-color: var(--yellow);
     color: black;
@@ -169,7 +176,9 @@ button:active {
 #promptBar.hide {opacity: 0;}
 
 #table {
-    overflow-x: scroll;
+    max-width: fit-content;
+    white-space: nowrap;
+    table-layout: fixed;
 }
 
 #table * {
@@ -218,7 +227,7 @@ button:active {
 
 #stats.minimized {display: initial; overflow: hidden;}
 
-#stats.minimized *:not(#minButton) {
+#stats.minimized *:not(#minView, #minView *) {
     display: none;
 }
 
@@ -281,6 +290,11 @@ button:active {
     margin-top: 0px;
 }
 
+#minView {
+    display: flex; flex-direction: row;
+    justify-content: center;
+}
+
 #minButton {
     border: none;
     background: none;
@@ -291,6 +305,7 @@ button:active {
     scale: 200% 100%;
     rotate: -180deg;
     transition: .2s;
+    flex-grow: 1;
 }
 
 #minButton.clicked {
@@ -302,22 +317,13 @@ button:active {
 }
 
 #usedContainer {
+    direction: rtl;
     margin: 10px;
-    display: flex;
-    flex-direction: column;
-    overflow-x: visible;
-    overflow-y: scroll;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-width: 30em;
     max-height: 30em;
     position: relative;
-}
-
-#usedContainer::-webkit-scrollbar {
-    position: fixed;
-    right: 0;
-    top: 0; height: 100%;
-    width: 5px;
-    height: 5px;
-    background-color: var(--yellow);
 }
 
 #rankLine {
@@ -325,6 +331,7 @@ button:active {
     background-color: gray;
     border: none;
     height: 1px;
+    transition: 0s;
 }
 
 #welcomeDialog {
@@ -429,8 +436,14 @@ mark {
         width: 80vw;
         height: 75vh;
     }
+    /*#usedContainer {
+        max-height: 50vh;
+    }*/
     #stats.minimized {
         height: 2em;
+    }
+    #minView {
+        margin-top: -1em;
     }
     #promptBar {
         z-index: 6;
@@ -438,6 +451,25 @@ mark {
     #promptBar.hide {
         z-index: -1;
     }
+    #dialogButton {
+        width: 45px; height: 45px;
+        text-align: center;
+    }
+}
+
+@media only screen and (min-width: 751px) {
+    #usedContainer::-webkit-scrollbar {
+        position: fixed;
+        right: 0;
+        top: 0; height: 100%;
+        width: 10px;
+        height: 10px;
+        background-color: var(--yellow);
+    }
+    
+    #usedContainer::-webkit-scrollbar-thumb {
+        background-color: darkgoldenrod;
+    }    
 }
 
 :root {

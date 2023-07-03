@@ -68,7 +68,8 @@ function replaceEndLetters(word) {
     ).join('');
 }
 
-let isWaiting = false;
+let isWaiting = false,
+numUsedWords = 0;
 
 shuffleLetters();
 
@@ -191,7 +192,7 @@ function resetText(message, duration = LONG_WAIT, classes='') {
             if(text.children[i] != tab)
                 text.removeChild(text.children[i]);
         //qsa('.row button').forEach(e=>e.onclick=letterClicked);
-    }, MICRO_WAIT);
+    }, SHORT_WAIT);
 }
 
 function updateText() {
@@ -326,6 +327,8 @@ function addWord(word) {
         usedWords[word.length] = [];
 
     usedWords[word.length].push(word);
+    numUsedWords++;
+    usedCounter.innerText = numUsedWords;
     updateTable();
 }
 
@@ -335,7 +338,8 @@ function updateTable() {
     for(const len in usedWords) {
         const th = make('th');
         th.innerText = len;
-        firstRow.insertBefore(th, firstRow.children[0]);
+        //firstRow.insertBefore(th, firstRow.children[0]);
+        firstRow.appendChild(th);
     }
     table.appendChild(firstRow);
 
@@ -352,7 +356,8 @@ function updateTable() {
                 tr.insertBefore(hr, tr.children[0]);*/
                 shouldStop = false;
             }
-            tr.insertBefore(td, tr.children[0]);
+            //tr.insertBefore(td, tr.children[0]);
+            tr.appendChild(td);
         }
         table.appendChild(tr);
         if(shouldStop) break;
@@ -389,16 +394,18 @@ function updateRank() {
         rankTitle.innerText = maxRank.title;
     }
 
-    setTimeout(updateRankLine, SHORT_WAIT);
+    updateRankLine(); setTimeout(updateRankLine, SHORT_WAIT);
 }
 
 function updateRankLine() {
-    const dot0 = RANKS[0].html.dot,
-        dot1 = RANKS[RANKS.length-1].html.dot,
+    const dot1 = RANKS[0].html.dot,
+        dot0 = RANKS[RANKS.length-1].html.dot,
+        bounds1 = bounds(dot1),
         bounds0 = bounds(dot0),
-        bounds1 = bounds(dot1);
-    rankLine.style.width = dot0.offsetLeft - dot1.offsetLeft + 'px';
-    rankLine.style.left = dot1.offsetLeft + dot1.offsetWidth/2 + dot1.offsetParent.offsetLeft + "px";
+        x0 = bounds0.x + bounds0.width / 2,
+        x1 = bounds1.x + bounds1.width / 2;
+    rankLine.style.width = x1 - x0 + 'px';
+    rankLine.style.left = dot0.offsetLeft + dot0.offsetWidth/2 + dot0.offsetParent.offsetLeft + "px";
 }
 
 function solvePuzzle() {
