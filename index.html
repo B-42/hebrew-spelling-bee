@@ -69,7 +69,8 @@
     </dialog>
     <dialog id="adminDialog">
         <h3>(כרגע נראה זוועה) ניהול</h3>
-        <input type="text" id="pass" placeholder="סיסמה" autocomplete="off" style="direction:ltr;">
+        <input type="text" id="pass" placeholder="סיסמה" autocomplete="off"
+            style="direction:ltr; touch-action: manipulation;">
         <div id="adminTools">
             <div id="consoleTool">
                 <form style="display: flex; flex-direction: row; justify-content: center;">
@@ -86,7 +87,7 @@
     </dialog>
     <div id="extras">
         <button id="dialogButton">?</button>
-        <button id="adminButton" onclick="buttonClick({target:this},()=>adminDialog.showModal())"
+        <button id="adminButton" onclick="buttonClick({target:this},()=>{adminDialog.showModal(); pass.blur();})"
             style="position: fixed; bottom: 0; left: 0;
             padding: 0; background: none;
             font-size: 10px; width: 15px; height: 15px;
