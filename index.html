@@ -9,11 +9,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css"/>
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <script src="utils.js"></script>
-    <script src="ranks.js"></script>
-    <script src="words.js"></script>
+    <script>
+        function uncover() {
+            try {
+                if(make && RANKS && dictionary && cyrb53a && checkWord) {
+                    cover.style.display = 'none';
+                }
+            } catch(e) {
+            }
+        }
+    </script>
+    <script src="utils.js" defer onload="uncover()"></script>
+    <script src="ranks.js" defer onload="uncover()"></script>
+    <script src="words.js" defer onload="uncover()"></script>
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
+    <div id="cover" style="background-color: var(--yellow);
+    position: fixed; left:0; top:0; width:100vw; height: 100vw; z-index: 10;">
+        <p>...חמודי אני נטען</p>
+    </div>
     <dialog id="welcomeDialog">
         <img src="assets/logo.png" style="width: 5em; height: 5em;">
         <h1><mark>איות בכוורת</mark></h1>
@@ -53,8 +67,30 @@
             </div>
         </div>
     </dialog>
+    <dialog id="adminDialog">
+        <h3>(כרגע נראה זוועה) ניהול</h3>
+        <input type="text" id="pass" placeholder="סיסמה" autocomplete="off" style="direction:ltr;">
+        <div id="adminTools">
+            <div id="consoleTool">
+                <form style="display: flex; flex-direction: row; justify-content: center;">
+                    <textarea style="width:50vw; max-height: 20em; direction: ltr; transition: 0s;" type="text" id="consoleInput"></textarea>
+                    <button id="consoleButton">בצע</button>
+                    <button id="consoleClear">נקה</button>
+                </form>
+                <code id="consoleOutput" style="word-wrap: break-word; user-select: text;"></code>
+            </div>
+        </div>
+        <form method="dialog" style="position: absolute; bottom: 20vh;">
+            <button>X</button>
+        </form>
+    </dialog>
     <div id="extras">
         <button id="dialogButton">?</button>
+        <button id="adminButton" onclick="buttonClick({target:this},()=>adminDialog.showModal())"
+            style="position: fixed; bottom: 0; left: 0;
+            padding: 0; background: none;
+            font-size: 10px; width: 15px; height: 15px;
+            border-radius: 0px; border: none; z-index: -1;">🔒</button>
     </div>
     <div id="container">
         <div id="input">
@@ -101,6 +137,7 @@
             </div>
         </div>
     </div>
-    <script src="script.js" defer></script>
+    <script src="cyrb53.js" defer onload="uncover()"></script>
+    <script src="script.js" defer onload="uncover()"></script>
 </body>
 </html>

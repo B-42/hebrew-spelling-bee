@@ -24,8 +24,8 @@ END_LETTER_PAIRS = [
 END_LETTERS_DICT = generateEndDict(),
 LETTERS = generatePuzzle()
 PAUSE_WHILE_MSG = false,
-BULLET = '•',
-LAST_DATE_KEY = 'lastDate';
+LAST_DATE_KEY = 'lastDate',
+ADMIN_HASH = 6421009277200913;
 
 function generatePuzzle() {
     while(!dictionary) {console.log('a')}
@@ -48,9 +48,9 @@ function showHistory() {
 const CENTER_LETTER = LETTERS[CENTER_INDEX],
 MSG_NO_CENTER = 'נחשו מילה עם ' + "<strong class='big'>"+CENTER_LETTER+"</strong>";
 usedSpan.innerText = CENTER_LETTER,
-SOLVED = solvePuzzle();
+{solutions, maxScore} = solvePuzzle();
 surrenderButton.onclick = ev => {
-    surrenderText.innerText = randItem(SOLVED.solutions);
+    surrenderText.innerText = randItem(solutions);
 }
 
 function generateEndDict() {
@@ -420,4 +420,28 @@ function solvePuzzle() {
         }
     }
     return {solutions, maxScore: solutions.map(scoreWord).reduce((a,b)=>a+b)};
+}
+
+function isPasswordValid(password) {
+    return cyrb53a(
+        password.substring(0, password.length - 3),
+        Math.floor( password.substring(password.length - 3) )
+    ) == ADMIN_HASH;
+}
+
+function consoleExecute() {
+    if(!isPasswordValid(pass.value))
+        return;
+    try {
+        consoleOutput.innerText = eval(consoleInput.value);
+    } catch(e) {
+        consoleOutput.innerText = e;
+    }
+}
+
+consoleButton.onclick = ev => {
+    ev.preventDefault(); consoleExecute();
+}
+consoleClear.onclick = ev => {
+    ev.preventDefault(); consoleInput.value = '';
 }
