@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="B-42">
+    <meta name="keywords" content="ספלינג בי, אותיות, משחק">
+    <meta name="description" content="גרסה בעברית של המשחק 'ספלינג בי' של הניו-יורק טיימס.">
     <title>איות בכוורת</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +28,7 @@
 </head>
 <body onresize="updateRankLine()" ontouchstart="">
     <div id="cover" style="background-color: var(--yellow);
-    position: fixed; left:0; top:0; width:100vw; height: 100vw; z-index: 10;">
+    position: fixed; left:0; top:0; width:100vw; height: 100vh; z-index: 10;">
         <p>...חמודי אני נטען</p>
     </div>
     <dialog id="welcomeDialog">
@@ -68,7 +71,7 @@
         </div>
     </dialog>
     <dialog id="adminDialog">
-        <h3>(כרגע נראה זוועה) ניהול</h3>
+        <h3>ניהול</h3>
         <input type="text" id="pass" placeholder="סיסמה" autocomplete="off"
             style="direction:ltr; touch-action: manipulation;">
         <div id="adminTools">
@@ -104,7 +107,9 @@
             <div id="controls">
                 <button id="deleteButton">מחק</button>
                 <button id="shuffleButton">
-                    <img src="assets/shuffle_icon.svg" style="max-width: 55%; position: absolute; left: 50%; top: 50%; translate: -50% -50%;"></img>
+                    <img src="assets/shuffle_icon.svg"
+                    style="max-width: 55%; position: absolute; left: 50%; top: 50%; translate: -50% -50%;"
+                    alt="לחץ על מנת לערבב את סדר האותיות"></img>
                 </button>
                 <button id="enterButton">בדוק</button>
             </div>
